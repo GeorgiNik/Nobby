@@ -154,60 +154,60 @@ namespace AspNetCoreSpa.Server.Extensions
                 options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-               .AddOAuthValidation()
+               .AddOAuthValidation();
                // https://console.developers.google.com/projectselector/apis/library?pli=1
-               .AddGoogle(options =>
-               {
-                   options.ClientId = Startup.Configuration["Authentication:Google:ClientId"];
-                   options.ClientSecret = Startup.Configuration["Authentication:Google:ClientSecret"];
-               })
-               // https://developers.facebook.com/apps
-               .AddFacebook(options =>
-               {
-                   options.AppId = Startup.Configuration["Authentication:Facebook:AppId"];
-                   options.AppSecret = Startup.Configuration["Authentication:Facebook:AppSecret"];
-               })
-               // https://apps.twitter.com/
-               .AddTwitter(options =>
-               {
-                   options.ConsumerKey = Startup.Configuration["Authentication:Twitter:ConsumerKey"];
-                   options.ConsumerSecret = Startup.Configuration["Authentication:Twitter:ConsumerSecret"];
-               })
-               // https://apps.dev.microsoft.com/?mkt=en-us#/appList
-               .AddMicrosoftAccount(options =>
-               {
-                   options.ClientId = Startup.Configuration["Authentication:Microsoft:ClientId"];
-                   options.ClientSecret = Startup.Configuration["Authentication:Microsoft:ClientSecret"];
-               })
-               // Note: Below social providers are supported through this open source library:
-               // https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers
-
-               // https://www.linkedin.com/secure/developer?newapp=
-               .AddLinkedIn(options =>
-               {
-                   options.ClientId = Startup.Configuration["Authentication:LinkedIn:ClientId"];
-                   options.ClientSecret = Startup.Configuration["Authentication:LinkedIn:ClientSecret"];
-
-               })
-               // https://github.com/settings/developers
-               .AddGitHub(options =>
-               {
-                   options.ClientId = Startup.Configuration["Authentication:Github:ClientId"];
-                   options.ClientSecret = Startup.Configuration["Authentication:Github:ClientSecret"];
-
-               })
-               // https://developer.paypal.com/developer/applications
-               .AddPaypal(options =>
-               {
-                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
-                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
-               })
-               // https://developer.yahoo.com/app
-               .AddYahoo(options =>
-               {
-                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
-                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
-               });
+//               .AddGoogle(options =>
+//               {
+//                   options.ClientId = Startup.Configuration["Authentication:Google:ClientId"];
+//                   options.ClientSecret = Startup.Configuration["Authentication:Google:ClientSecret"];
+//               })
+//               // https://developers.facebook.com/apps
+//               .AddFacebook(options =>
+//               {
+//                   options.AppId = Startup.Configuration["Authentication:Facebook:AppId"];
+//                   options.AppSecret = Startup.Configuration["Authentication:Facebook:AppSecret"];
+//               })
+//               // https://apps.twitter.com/
+//               .AddTwitter(options =>
+//               {
+//                   options.ConsumerKey = Startup.Configuration["Authentication:Twitter:ConsumerKey"];
+//                   options.ConsumerSecret = Startup.Configuration["Authentication:Twitter:ConsumerSecret"];
+//               })
+//               // https://apps.dev.microsoft.com/?mkt=en-us#/appList
+//               .AddMicrosoftAccount(options =>
+//               {
+//                   options.ClientId = Startup.Configuration["Authentication:Microsoft:ClientId"];
+//                   options.ClientSecret = Startup.Configuration["Authentication:Microsoft:ClientSecret"];
+//               })
+//               // Note: Below social providers are supported through this open source library:
+//               // https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers
+//
+//               // https://www.linkedin.com/secure/developer?newapp=
+//               .AddLinkedIn(options =>
+//               {
+//                   options.ClientId = Startup.Configuration["Authentication:LinkedIn:ClientId"];
+//                   options.ClientSecret = Startup.Configuration["Authentication:LinkedIn:ClientSecret"];
+//
+//               })
+//               // https://github.com/settings/developers
+//               .AddGitHub(options =>
+//               {
+//                   options.ClientId = Startup.Configuration["Authentication:Github:ClientId"];
+//                   options.ClientSecret = Startup.Configuration["Authentication:Github:ClientSecret"];
+//
+//               })
+//               // https://developer.paypal.com/developer/applications
+//               .AddPaypal(options =>
+//               {
+//                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
+//                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
+//               })
+//               // https://developer.yahoo.com/app
+//               .AddYahoo(options =>
+//               {
+//                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
+//                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
+//               });
 
             return services;
         }

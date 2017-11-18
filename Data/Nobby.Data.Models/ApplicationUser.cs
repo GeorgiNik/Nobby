@@ -3,7 +3,8 @@ namespace Nobby.Data.Models
 {
     using System;
     using System.Collections.Generic;
-
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using Microsoft.AspNetCore.Identity;
     using Nobby.Data.Common.Models;
 
@@ -16,6 +17,16 @@ namespace Nobby.Data.Models
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
+        
+        [StringLength(250)]
+        public string FirstName { get; set; }
+        [StringLength(250)]
+        public string LastName { get; set; }
+
+        public ApplicationUserPhoto ProfilePhoto { get; set; }
+
+        [NotMapped]
+        public string Name => this.FirstName + " " + this.LastName;
 
         // Audit info
         public DateTime CreatedOn { get; set; }

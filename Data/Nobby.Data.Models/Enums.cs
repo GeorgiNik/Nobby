@@ -1,4 +1,4 @@
-namespace AspNetCoreSpa.Server.Entities
+namespace Nobby.Data.Models
 {
     public enum ExternalLoginStatus
     {
