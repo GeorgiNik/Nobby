@@ -1,11 +1,11 @@
-using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace AspNetCoreSpa.Server.Extensions
 {
+    using System.Linq;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Migrations;
+    using Nobby.Data;
+
     public static class DbContextExtensions
     {
         public static void Seed(this ApplicationDbContext context, IWebHost host)

@@ -6,14 +6,14 @@ namespace AspNetCoreSpa.Server.Extensions
 {
     public static class IdentityExtensions
     {
-        public static int GetUserId(this ClaimsPrincipal principal)
+        public static string GetUserId(this ClaimsPrincipal principal)
         {
             if (principal == null)
                 throw new ArgumentNullException(nameof(principal));
 
-            var id = principal.FindFirst(OpenIdConnectConstants.Claims.Subject)?.Value;
+            string id = principal.FindFirst(OpenIdConnectConstants.Claims.Subject)?.Value;
 
-            return Convert.ToInt32(id);
+            return id;
         }
     }
 }

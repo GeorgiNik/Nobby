@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
 
     using Nobby.Data.Common.Repositories;
@@ -49,6 +50,13 @@
         }
 
         public Task<int> SaveChangesAsync() => this.Context.SaveChangesAsync();
+
+        public Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> func)
+        {
+            var entity = this.DbSet.FirstOrDefaultAsync(func);
+            
+            return entity;
+        }
 
         public void Dispose() => this.Context.Dispose();
     }

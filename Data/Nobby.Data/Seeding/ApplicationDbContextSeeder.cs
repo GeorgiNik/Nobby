@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-
+    using Microsoft.AspNetCore.Hosting;
     using Nobby.Common;
     using Nobby.Data.Models;
 
@@ -13,6 +13,7 @@
     {
         public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
+            
             if (dbContext == null)
             {
                 throw new ArgumentNullException(nameof(dbContext));

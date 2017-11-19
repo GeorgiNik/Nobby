@@ -1,17 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AspNetCoreSpa.Server.Entities;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using OpenIddict.Core;
-using OpenIddict.Models;
-
 namespace AspNetCoreSpa.Server
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+    using Nobby.Common;
+    using Nobby.Data;
+    using Nobby.Data.Models;
+    using OpenIddict.Core;
+    using OpenIddict.Models;
+
     public class SeedDbData
     {
         readonly ApplicationDbContext _context;
@@ -23,47 +25,44 @@ namespace AspNetCoreSpa.Server
         {
             var services = (IServiceScopeFactory)host.Services.GetService(typeof(IServiceScopeFactory));
             var serviceScope = services.CreateScope();
-            _hostingEnv = serviceScope.ServiceProvider.GetService<IHostingEnvironment>();
-            _roleManager = serviceScope.ServiceProvider.GetService<RoleManager<ApplicationRole>>();
-            _userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-            _context = context;
-            CreateRoles(); // Add roles
-            CreateUsers(); // Add users
-            AddLocalisedData();
-            AddOpenIdConnectOptions(serviceScope, CancellationToken.None).GetAwaiter().GetResult();
+            this._hostingEnv = serviceScope.ServiceProvider.GetService<IHostingEnvironment>();
+            this._roleManager = serviceScope.ServiceProvider.GetService<RoleManager<ApplicationRole>>();
+            this._userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+            this._context = context;
+            this.CreateRoles(); // Add roles
+            this.CreateUsers(); // Add users
+            this.AddLocalisedData();
+            this.AddOpenIdConnectOptions(serviceScope, CancellationToken.None).GetAwaiter().GetResult();
         }
 
         private void CreateRoles()
         {
             var rolesToAdd = new List<ApplicationRole>(){
-                new ApplicationRole { Name= "Admin", Description = "Full rights role"},
-                new ApplicationRole { Name= "User", Description = "Limited rights role"}
+                new ApplicationRole { Name= GlobalConstants.AdministratorRoleName},
+                new ApplicationRole { Name= GlobalConstants.NormalUserRole}
             };
             foreach (var role in rolesToAdd)
             {
-                if (!_roleManager.RoleExistsAsync(role.Name).Result)
+                if (!this._roleManager.RoleExistsAsync(role.Name).Result)
                 {
-                    _roleManager.CreateAsync(role).Result.ToString();
+                    this._roleManager.CreateAsync(role).Result.ToString();
                 }
             }
         }
         private void CreateUsers()
         {
-            if (!_context.ApplicationUsers.Any())
+            if (!this._context.ApplicationUsers.Any())
             {
 
-                _userManager.CreateAsync(new ApplicationUser { UserName = "admin@admin.com", FirstName = "Admin first", LastName = "Admin last", Email = "admin@admin.com", EmailConfirmed = true, CreatedDate = DateTime.Now, IsEnabled = true }, "P@ssw0rd!").Result.ToString();
-                _userManager.AddToRoleAsync(_userManager.FindByNameAsync("admin@admin.com").GetAwaiter().GetResult(), "Admin").Result.ToString();
-
-                _userManager.CreateAsync(new ApplicationUser { UserName = "user@user.com", FirstName = "First", LastName = "Last", Email = "user@user.com", EmailConfirmed = true, CreatedDate = DateTime.Now, IsEnabled = true }, "P@ssw0rd!").Result.ToString();
-                _userManager.AddToRoleAsync(_userManager.FindByNameAsync("user@user.com").GetAwaiter().GetResult(), "User").Result.ToString();
+                this._userManager.CreateAsync(new ApplicationUser { UserName = "admin@admin.com", FirstName = "Admin first", LastName = "Admin last", Email = "admin@admin.com", EmailConfirmed = true }, "P@ssw0rd!").Result.ToString();
+                this._userManager.AddToRoleAsync(this._userManager.FindByNameAsync("admin@admin.com").GetAwaiter().GetResult(), GlobalConstants.AdministratorRoleName).Result.ToString();
             }
         }
         private void AddLocalisedData()
         {
-            if (!_context.Cultures.Any())
+            if (!this._context.Cultures.Any())
             {
-                _context.Cultures.AddRange(
+                this._context.Cultures.AddRange(
                     new Culture
                     {
                         Name = "en-US",
@@ -77,24 +76,10 @@ namespace AspNetCoreSpa.Server
                             new Resource { Key = "app_nav_login", Value = "Login" },
                             new Resource { Key = "app_nav_logout", Value = "Logout" },
                         }
-                    },
-                    new Culture
-                    {
-                        Name = "fr-FR",
-                        Resources = new List<Resource>() {
-                            new Resource { Key = "app_title", Value = "AspNetCoreSpa" },
-                            new Resource { Key = "app_description", Value = "Application d'une seule page utilisant aspnet core et angular" },
-                            new Resource { Key = "app_nav_home", Value = "Accueil" },
-                            new Resource { Key = "app_nav_chat", Value = "Bavarder" },
-                            new Resource { Key = "app_nav_examples", Value = "Exemples" },
-                            new Resource { Key = "app_nav_register", Value = "registre" },
-                            new Resource { Key = "app_nav_login", Value = "S'identifier" },
-                            new Resource { Key = "app_nav_logout", Value = "Connectez - Out" },
-                        }
                     }
                     );
 
-                _context.SaveChanges();
+                this._context.SaveChanges();
             }
 
         }
@@ -105,7 +90,7 @@ namespace AspNetCoreSpa.Server
 
             if (await manager.FindByClientIdAsync("aspnetcorespa", cancellationToken) == null)
             {
-                var host = _hostingEnv.IsDevelopment() ? "http://localhost:5000" : "http://aspnetcorespa.azurewebsites.net";
+                var host = this._hostingEnv.IsDevelopment() ? "http://localhost:5000" : "http://aspnetcorespa.azurewebsites.net";
                 var descriptor = new OpenIddictApplicationDescriptor
                 {
                     ClientId = "aspnetcorespa",

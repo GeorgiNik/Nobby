@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
 using AspNet.Security.OpenIdConnect.Server;
-using AspNetCoreSpa.Server.Entities;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +18,8 @@ using AspNetCoreSpa.Server.Filters;
 
 namespace AspNetCoreSpa.Server.Controllers.api
 {
+    using Nobby.Data.Models;
+
     public class AuthorizationController : BaseController
     {
         private readonly IOptions<IdentityOptions> _identityOptions;

@@ -42,6 +42,15 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\main.ts" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Nobby.Data.Models\Nobby.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\Nobby.Data\Nobby.Data.csproj" />
+    <ProjectReference Include="..\..\Nobby.Common\Nobby.Common.csproj" />
+    <ProjectReference Include="..\..\Services\Nobby.Services.Data\Nobby.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\Nobby.Services.Messaging\Nobby.Services.Messaging.csproj" />
+    <ProjectReference Include="..\..\Services\Nobby.Services\Nobby.Services.csproj" />
+    <ProjectReference Include="..\Nobby.Web.Infrastructure\Nobby.Web.Infrastructure.csproj" />
+  </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

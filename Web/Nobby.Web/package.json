@@ -12,8 +12,6 @@
     "ng-bootstrap",
     "ngx-translate"
   ],
-  "repository": "git+https://github.com/asadsahi/AspNetCoreSpa.git",
-  "author": "Asad Sahi <asadazmat@gmail.com>",
   "scripts": {
     "tslint": "tslint",
     "protractor": "protractor",

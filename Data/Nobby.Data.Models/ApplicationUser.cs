@@ -20,6 +20,7 @@ namespace Nobby.Data.Models
         
         [StringLength(250)]
         public string FirstName { get; set; }
+        
         [StringLength(250)]
         public string LastName { get; set; }
 

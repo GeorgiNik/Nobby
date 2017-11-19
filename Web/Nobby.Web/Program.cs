@@ -11,10 +11,8 @@ namespace AspNetCoreSpa
         public static void Main(string[] args)
         {
             var host = BuildWebHost(args);
-
-            // http://odetocode.com/blogs/scott/archive/2016/09/20/database-migrations-and-seeding-in-asp-net-core.aspx
             ProcessDbCommands.Process(args, host);
-
+            // http://odetocode.com/blogs/scott/archive/2016/09/20/database-migrations-and-seeding-in-asp-net-core.aspx
             host.Run();
 
         }

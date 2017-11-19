@@ -15,6 +15,13 @@ using OpenIddict.Models;
 
 namespace AspNetCoreSpa
 {
+    using System.Reflection;
+    using AspNetCoreSpa.Server.ViewModels.AccountViewModels;
+    using Microsoft.EntityFrameworkCore;
+    using Nobby.Data;
+    using Nobby.Data.Seeding;
+    using Nobby.Web.Infrastructure.Mapping;
+
     public class Startup
     {
         // Order or run
@@ -87,8 +94,24 @@ namespace AspNetCoreSpa
                 c.SwaggerDoc("v1", new Info { Title = "AspNetCoreSpa", Version = "v1" });
             });
         }
+        
         public void Configure(IApplicationBuilder app)
         {
+            AutoMapperConfig.RegisterMappings(typeof(LoginViewModel).GetTypeInfo().Assembly);
+
+            // Seed data on application startup
+//            using (var serviceScope = app.ApplicationServices.CreateScope())
+//            {
+//                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//
+//                if (_hostingEnv.IsDevelopment())
+//                {
+//                    dbContext.Database.Migrate();
+//                }
+//
+//                ApplicationDbContextSeeder.Seed(dbContext, serviceScope.ServiceProvider);
+//            }
+            
             app.UseCustomisedCsp();
             
             app.UseCustomisedHeadersMiddleware();
@@ -107,7 +130,7 @@ namespace AspNetCoreSpa
             app.UseAuthentication();
 
             app.UseStaticFiles();
-
+    
             app.UseSignalR(routes =>
             {
                 routes.MapHub<Chat>("chathub");

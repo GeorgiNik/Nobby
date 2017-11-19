@@ -23,6 +23,8 @@ using System.Linq;
 
 namespace AspNetCoreSpa.Server.Extensions
 {
+    using Nobby.Data;
+
     public static class ApplicationBuilderExtensions
     {
         public static IApplicationBuilder UseCustomisedHeadersMiddleware(this IApplicationBuilder app)

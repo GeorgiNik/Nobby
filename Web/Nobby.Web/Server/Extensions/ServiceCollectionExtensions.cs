@@ -1,29 +1,26 @@
-﻿using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using AspNetCoreSpa.Server.Entities;
-using AspNetCoreSpa.Server.Filters;
-using AspNetCoreSpa.Server.Services;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
-using AspNet.Security.OpenIdConnect.Primitives;
-using Microsoft.AspNetCore.Identity;
-using OpenIddict.Core;
-using OpenIddict.Models;
-using System.Net;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Localization;
-using AspNetCoreSpa.Server.Middlewares.EntityFrameworkLocalizer;
-
-namespace AspNetCoreSpa.Server.Extensions
+﻿namespace AspNetCoreSpa.Server.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using AspNet.Security.OpenIdConnect.Primitives;
+    using AspNetCoreSpa.Server.Filters;
+    using AspNetCoreSpa.Server.Middlewares.EntityFrameworkLocalizer;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Localization;
+    using Microsoft.AspNetCore.Mvc.Razor;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Localization;
+    using Nobby.Data;
+    using Nobby.Data.Common.Repositories;
+    using Nobby.Data.Models;
+    using Nobby.Data.Repositories;
+    using Nobby.Services.Messaging;
+
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddSslCertificate(this IServiceCollection services, IHostingEnvironment hostingEnv)
@@ -37,34 +34,38 @@ namespace AspNetCoreSpa.Server.Extensions
 
             return services;
         }
+
         public static IServiceCollection AddCustomizedMvc(this IServiceCollection services)
         {
             services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(ModelValidationFilter));
-            })
-            .AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization();
+                {
+                    options.Filters.Add(typeof(ModelValidationFilter));
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                })
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
 
             return services;
         }
+
         public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
         {
             // For api unauthorised calls return 401 with no body
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-                options.Password.RequiredLength = 4;
+                options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
             return services;
         }
+
         public static IServiceCollection AddCustomOpenIddict(this IServiceCollection services)
         {
             // Configure Identity to use the same JWT claims as OpenIddict instead
@@ -97,9 +98,7 @@ namespace AspNetCoreSpa.Server.Extensions
                 options.EnableAuthorizationEndpoint("/connect/authorize");
 
                 // Enable the password and the refresh token flows.
-                options.AllowPasswordFlow()
-                       .AllowRefreshTokenFlow()
-                       .AllowImplicitFlow(); // To enable external logins to authenticate
+                options.AllowPasswordFlow().AllowRefreshTokenFlow().AllowImplicitFlow(); // To enable external logins to authenticate
 
                 options.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
                 options.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
@@ -153,64 +152,64 @@ namespace AspNetCoreSpa.Server.Extensions
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-               .AddOAuthValidation();
-               // https://console.developers.google.com/projectselector/apis/library?pli=1
-//               .AddGoogle(options =>
-//               {
-//                   options.ClientId = Startup.Configuration["Authentication:Google:ClientId"];
-//                   options.ClientSecret = Startup.Configuration["Authentication:Google:ClientSecret"];
-//               })
-//               // https://developers.facebook.com/apps
-//               .AddFacebook(options =>
-//               {
-//                   options.AppId = Startup.Configuration["Authentication:Facebook:AppId"];
-//                   options.AppSecret = Startup.Configuration["Authentication:Facebook:AppSecret"];
-//               })
-//               // https://apps.twitter.com/
-//               .AddTwitter(options =>
-//               {
-//                   options.ConsumerKey = Startup.Configuration["Authentication:Twitter:ConsumerKey"];
-//                   options.ConsumerSecret = Startup.Configuration["Authentication:Twitter:ConsumerSecret"];
-//               })
-//               // https://apps.dev.microsoft.com/?mkt=en-us#/appList
-//               .AddMicrosoftAccount(options =>
-//               {
-//                   options.ClientId = Startup.Configuration["Authentication:Microsoft:ClientId"];
-//                   options.ClientSecret = Startup.Configuration["Authentication:Microsoft:ClientSecret"];
-//               })
-//               // Note: Below social providers are supported through this open source library:
-//               // https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers
-//
-//               // https://www.linkedin.com/secure/developer?newapp=
-//               .AddLinkedIn(options =>
-//               {
-//                   options.ClientId = Startup.Configuration["Authentication:LinkedIn:ClientId"];
-//                   options.ClientSecret = Startup.Configuration["Authentication:LinkedIn:ClientSecret"];
-//
-//               })
-//               // https://github.com/settings/developers
-//               .AddGitHub(options =>
-//               {
-//                   options.ClientId = Startup.Configuration["Authentication:Github:ClientId"];
-//                   options.ClientSecret = Startup.Configuration["Authentication:Github:ClientSecret"];
-//
-//               })
-//               // https://developer.paypal.com/developer/applications
-//               .AddPaypal(options =>
-//               {
-//                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
-//                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
-//               })
-//               // https://developer.yahoo.com/app
-//               .AddYahoo(options =>
-//               {
-//                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
-//                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
-//               });
+            }).AddOAuthValidation();
+            // https://console.developers.google.com/projectselector/apis/library?pli=1
+            //               .AddGoogle(options =>
+            //               {
+            //                   options.ClientId = Startup.Configuration["Authentication:Google:ClientId"];
+            //                   options.ClientSecret = Startup.Configuration["Authentication:Google:ClientSecret"];
+            //               })
+            //               // https://developers.facebook.com/apps
+            //               .AddFacebook(options =>
+            //               {
+            //                   options.AppId = Startup.Configuration["Authentication:Facebook:AppId"];
+            //                   options.AppSecret = Startup.Configuration["Authentication:Facebook:AppSecret"];
+            //               })
+            //               // https://apps.twitter.com/
+            //               .AddTwitter(options =>
+            //               {
+            //                   options.ConsumerKey = Startup.Configuration["Authentication:Twitter:ConsumerKey"];
+            //                   options.ConsumerSecret = Startup.Configuration["Authentication:Twitter:ConsumerSecret"];
+            //               })
+            //               // https://apps.dev.microsoft.com/?mkt=en-us#/appList
+            //               .AddMicrosoftAccount(options =>
+            //               {
+            //                   options.ClientId = Startup.Configuration["Authentication:Microsoft:ClientId"];
+            //                   options.ClientSecret = Startup.Configuration["Authentication:Microsoft:ClientSecret"];
+            //               })
+            //               // Note: Below social providers are supported through this open source library:
+            //               // https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers
+            //
+            //               // https://www.linkedin.com/secure/developer?newapp=
+            //               .AddLinkedIn(options =>
+            //               {
+            //                   options.ClientId = Startup.Configuration["Authentication:LinkedIn:ClientId"];
+            //                   options.ClientSecret = Startup.Configuration["Authentication:LinkedIn:ClientSecret"];
+            //
+            //               })
+            //               // https://github.com/settings/developers
+            //               .AddGitHub(options =>
+            //               {
+            //                   options.ClientId = Startup.Configuration["Authentication:Github:ClientId"];
+            //                   options.ClientSecret = Startup.Configuration["Authentication:Github:ClientSecret"];
+            //
+            //               })
+            //               // https://developer.paypal.com/developer/applications
+            //               .AddPaypal(options =>
+            //               {
+            //                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
+            //                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
+            //               })
+            //               // https://developer.yahoo.com/app
+            //               .AddYahoo(options =>
+            //               {
+            //                   options.ClientId = Startup.Configuration["Authentication:Paypal:ClientId"];
+            //                   options.ClientSecret = Startup.Configuration["Authentication:Paypal:ClientSecret"];
+            //               });
 
             return services;
         }
+
         public static IServiceCollection AddCustomDbContext(this IServiceCollection services)
         {
             // Add framework services.
@@ -238,35 +237,36 @@ namespace AspNetCoreSpa.Server.Extensions
         public static IServiceCollection AddCustomLocalization(this IServiceCollection services)
         {
             services.Configure<RequestLocalizationOptions>(opts =>
+            {
+                var supportedCultures = new List<CultureInfo>
                 {
-                    var supportedCultures = new List<CultureInfo>
-                    {
-                                new CultureInfo("en-US"),
-                                new CultureInfo("fr-FR")
-                    };
+                    new CultureInfo("en-US")
+                };
 
-                    opts.DefaultRequestCulture = new RequestCulture("en-US");
-                    // Formatting numbers, dates, etc.
-                    opts.SupportedCultures = supportedCultures;
-                    // UI strings that we have localized.
-                    opts.SupportedUICultures = supportedCultures;
-                });
+                opts.DefaultRequestCulture = new RequestCulture("en-US");
+                // Formatting numbers, dates, etc.
+                opts.SupportedCultures = supportedCultures;
+                // UI strings that we have localized.
+                opts.SupportedUICultures = supportedCultures;
+            });
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             return services;
         }
+
         public static IServiceCollection RegisterCustomServices(this IServiceCollection services)
         {
-            // New instance every time, only configuration class needs so its ok
-            services.AddSingleton<IStringLocalizerFactory, EFStringLocalizerFactory>();
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<ApplicationDbContext>();
-            services.AddScoped<UserResolverService>();
+            services.AddSingleton<IStringLocalizerFactory, EFStringLocalizerFactory>();
             services.AddScoped<ApiExceptionFilter>();
+            services.AddScoped<IEmailSender, NullMessageSender>();
+            services.AddScoped<ISmsSender, NullMessageSender>();
+            // Data repositories
+            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            
             return services;
         }
-
     }
 }

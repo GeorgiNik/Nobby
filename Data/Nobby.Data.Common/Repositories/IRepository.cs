@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
 
     public interface IRepository<TEntity> : IDisposable
@@ -20,5 +21,7 @@
         void Delete(TEntity entity);
 
         Task<int> SaveChangesAsync();
+
+        Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> func);
     }
 }

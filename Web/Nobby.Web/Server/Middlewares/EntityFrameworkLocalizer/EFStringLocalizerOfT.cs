@@ -9,6 +9,8 @@ using Microsoft.Extensions.Localization;
 
 namespace AspNetCoreSpa.Server.Middlewares.EntityFrameworkLocalizer
 {
+    using Nobby.Data;
+
     public class EFStringLocalizer<T> : IStringLocalizer<T>
     {
         private readonly ApplicationDbContext _context;

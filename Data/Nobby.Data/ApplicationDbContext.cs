@@ -25,6 +25,10 @@
         }
 
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<Resource> Resources { get; set; }
+        public DbSet<Culture> Cultures { get; set; }
+        public DbSet<ApplicationUserPhoto> Photos { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

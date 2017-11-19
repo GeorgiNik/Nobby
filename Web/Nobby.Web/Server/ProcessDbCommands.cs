@@ -1,12 +1,11 @@
-using System;
-using System.Linq;
-using AspNetCoreSpa.Server.Extensions;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace AspNetCoreSpa.Server
 {
+    using System;
+    using AspNetCoreSpa.Server.Extensions;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+    using Nobby.Data;
+
     public class ProcessDbCommands
     {
         public static void Process(string[] args, IWebHost host)
@@ -14,9 +13,9 @@ namespace AspNetCoreSpa.Server
             var services = (IServiceScopeFactory)host.Services.GetService(typeof(IServiceScopeFactory));
             var seedService = (SeedDbData)host.Services.GetService(typeof(SeedDbData));
 
-            using (var scope = services.CreateScope())
+            using (IServiceScope scope = services.CreateScope())
             {
-                var db = GetApplicationDbContext(scope);
+                ApplicationDbContext db = GetApplicationDbContext(scope);
                 // if (args.Contains("dropdb"))
                 // {
                 //     Console.WriteLine("Dropping database");

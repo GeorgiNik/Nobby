@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using AspNetCoreSpa.Server.Entities;
 using Microsoft.Extensions.Localization;
 
 namespace AspNetCoreSpa.Server.Middlewares.EntityFrameworkLocalizer
 {
+    using Nobby.Data;
+
     public class EFStringLocalizerFactory : IStringLocalizerFactory
     {
         private readonly ApplicationDbContext _context;
